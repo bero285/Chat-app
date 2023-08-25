@@ -15,7 +15,7 @@ import { MyContext } from "../Context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const fetchAllUsers = async () => {
   try {
-    const response = await fetch("somelinktoapi/users");
+    const response = await fetch("https://chat-app-fw16.onrender.com/users");
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }

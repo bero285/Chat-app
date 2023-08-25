@@ -12,7 +12,7 @@ import { useMutation } from "react-query";
 
 const setNameFetch = async (userName) => {
   try {
-    const response = await fetch("somelinktoapi/login", {
+    const response = await fetch("https://chat-app-fw16.onrender.com/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userName }),

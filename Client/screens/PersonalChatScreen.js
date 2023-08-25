@@ -15,7 +15,7 @@ import io from "socket.io-client";
 const fetchChats = async ({ firstUser, secondUser }) => {
   try {
     const requestBody = JSON.stringify({ firstUser, secondUser });
-    const response = await fetch("somelinktoapi/chats", {
+    const response = await fetch("https://chat-app-fw16.onrender.com/chats", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,7 +32,7 @@ const fetchChats = async ({ firstUser, secondUser }) => {
   }
 };
 
-const socket = io("somelinktoapi");
+const socket = io("https://chat-app-fw16.onrender.com/");
 export default function PersonalChatScreen({ navigation, route }) {
   const [allChats, setAllChats] = useState([]);
   const {
@@ -89,7 +89,7 @@ export default function PersonalChatScreen({ navigation, route }) {
   }, [userName, exist, mutateChat]);
 
   useEffect(() => {
-    scrollViewRef.current.scrollToEnd({ animated: true });
+    // scrollViewRef.current.scrollToEnd({ animated: true });
   }, []);
 
   useEffect(() => {
