@@ -12,10 +12,11 @@ import Message from "../components/Message";
 import { useQuery, useMutation } from "react-query";
 import { MyContext } from "../Context";
 import io from "socket.io-client";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const fetchChats = async ({ firstUser, secondUser }) => {
   try {
     const requestBody = JSON.stringify({ firstUser, secondUser });
-    const response = await fetch("https://chat-app-fw16.onrender.com/chats", {
+    const response = await fetch("somerandomlink/chats", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,9 +33,11 @@ const fetchChats = async ({ firstUser, secondUser }) => {
   }
 };
 
-const socket = io("https://chat-app-fw16.onrender.com/");
+const socket = io("somerandomlink/");
+
 export default function PersonalChatScreen({ navigation, route }) {
   const [allChats, setAllChats] = useState([]);
+  const [userSaved, setUserSaved] = useState()
   const {
     mutate: mutateChat,
     data: dataChats,
@@ -55,20 +58,36 @@ export default function PersonalChatScreen({ navigation, route }) {
     } catch (error) {
       console.error(error);
     }
-    scrollViewRef.current.scrollToEnd({ animated: true });
+
   };
+
+  async function retrieveData(key) {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      if (value) {
+        setUserSaved(value)
+
+      }
+    } catch (error) {
+      console.error("Error retrieving data:", error);
+    }
+  }
 
   const { exist, setExist } = useContext(MyContext);
 
   if (userName && exist === undefined) {
     return <Text>Loading exist...</Text>;
   }
+
   useEffect(() => {
     socket.on("messageReceived", (newMessage) => {
-      scrollViewRef.current.scrollToEnd({ animated: true });
-      if (exist === newMessage[1] || exist === newMessage[2]) {
-        if (userName === newMessage[1] || userName === newMessage[2]) {
-          setAllChats(newMessage[0]);
+
+      let firstName = newMessage.bothUser.split(" ")[0]
+      let secondName = newMessage.bothUser.split(" ")[1]
+
+      if (exist === firstName || exist === secondName) {
+        if (userName === firstName || userName === secondName) {
+          setAllChats(newMessage.chats);
         }
       }
     });
@@ -89,7 +108,8 @@ export default function PersonalChatScreen({ navigation, route }) {
   }, [userName, exist, mutateChat]);
 
   useEffect(() => {
-    // scrollViewRef.current.scrollToEnd({ animated: true });
+
+    retrieveData("username")
   }, []);
 
   useEffect(() => {
@@ -107,15 +127,8 @@ export default function PersonalChatScreen({ navigation, route }) {
         <Text style={styles.username}>{userName}</Text>
       </View>
       <ScrollView style={styles.scrollview} ref={scrollViewRef}>
-        {/* {allChats
-          ? allChats.map((arr) => {
-              return (
-                <Message key={Math.random()} message={arr[1]} name={arr[0]} />
-              );
-            })
-          : null} */}
         {allChats.map((arr, index) => (
-          <Message key={index} message={arr[1]} name={arr[0]} />
+          <Message key={index} message={arr[1]} name={arr[0]} user={userSaved} />
         ))}
       </ScrollView>
       <View style={styles.messageContainer}>
@@ -139,6 +152,7 @@ export default function PersonalChatScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
   },
   headContainer: {
     flexDirection: "row",

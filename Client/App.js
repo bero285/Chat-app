@@ -15,13 +15,13 @@ export default function App() {
   const [exist, setExist] = useState("");
   return (
     <QueryClientProvider client={queryClient}>
-    <MyContext.Provider value={{ exist, setExist }}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <NavigationContainer>
-          <AppNavigator />
-        </NavigationContainer>
-      </SafeAreaView>
-    </MyContext.Provider>
+      <MyContext.Provider value={{ exist, setExist }}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <NavigationContainer>
+            <AppNavigator />
+          </NavigationContainer>
+        </SafeAreaView>
+      </MyContext.Provider>
     </QueryClientProvider>
   );
 }

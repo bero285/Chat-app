@@ -6,7 +6,7 @@ export const login = async (req, res) => {
   try {
     const { userName } = req.body;
 
-    const user = await User.findOne({userName });
+    const user = await User.findOne({ userName });
 
     if (!user) {
       const newUser = new User({

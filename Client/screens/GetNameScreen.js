@@ -12,7 +12,7 @@ import { useMutation } from "react-query";
 
 const setNameFetch = async (userName) => {
   try {
-    const response = await fetch("https://chat-app-fw16.onrender.com/login", {
+    const response = await fetch("somerandomlink/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userName }),
@@ -58,6 +58,9 @@ export default function GetNameScreen({ navigation }) {
         setLogError(" ");
       }, 4000);
     }
+    if (isLoading) {
+      return <Text>...Loading</Text>;
+    }
   };
   return (
     <View style={styles.container}>
@@ -76,15 +79,14 @@ export default function GetNameScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+
     width: "100%",
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "red",
+
   },
   headText: {
-    // height: "40%",
     backgroundColor: "yellow",
   },
   input: {
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   button: {
-    backgroundColor: "red",
+    backgroundColor: "purple",
     width: "40%",
     // borderWidth: 2,
     padding: 5,

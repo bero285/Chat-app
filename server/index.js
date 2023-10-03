@@ -8,7 +8,7 @@ import userRoutes from "./routes/users.js";
 import loginRoutes from "./routes/login.js";
 import http from "http";
 import { Server } from "socket.io";
-import { sendMessageController } from "./controllers/chats.js";
+import { sendMessage } from "./controllers/chats.js";
 import Chat from "./models/chats.js";
 dotenv.config();
 const app = express();
@@ -34,46 +34,7 @@ mongoose
       console.log("Server is running on port 3001");
     });
 
-    const changeStream = Chat.watch([], {
-      fullDocument: "updateLookup",
-    });
 
-    changeStream.on("change", async (change) => {
-      console.log("Something changed");
-
-      io.sockets.sockets.forEach(async (socket) => {
-        if (!socket.userData) {
-          return;
-        }
-
-        const { firstUser, secondUser } = socket.userData;
-       
-        const allUser = [firstUser, secondUser];
-        allUser.sort();
-        if (
-          change.operationType === "insert" &&
-          change.fullDocument.bothUser === allUser[0] + " " + allUser[1]
-        ) {
-          socket.emit("messageReceived", change.fullDocument.chats);
-        }
-
-        if (change.operationType === "update") {
-          const chatRoomId = change.documentKey._id;
-          const updatedChatRoom = await Chat.findById(chatRoomId);
-
-          if (
-            updatedChatRoom &&
-            updatedChatRoom.bothUser === allUser[0] + " " + allUser[1]
-          ) {
-            io.emit("messageReceived", [
-              updatedChatRoom.chats,
-              allUser[0],
-              allUser[1],
-            ]);
-          }
-        }
-      });
-    });
   })
   .catch((error) => {
     console.error("MongoDB connection error: ", error);
@@ -86,14 +47,14 @@ io.on("connection", (socket) => {
     try {
       const { firstUser, secondUser, message } = data;
 
-      const result = await sendMessageController(
+      const result = await sendMessage(
         firstUser,
         secondUser,
         message
       );
-    
 
-      socket.userData = { firstUser, secondUser };
+      io.emit("messageReceived", result);
+
     } catch (error) {
       console.error("Error processing sendMessage:", error);
     }

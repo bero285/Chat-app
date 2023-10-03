@@ -25,7 +25,7 @@ export const createChat = async (req, res) => {
   }
 };
 
-export const sendMessageController = async (firstUser, secondUser, message) => {
+export const sendMessage = async (firstUser, secondUser, message) => {
   console.log("send Message");
   try {
     const arrMessage = [secondUser, message];

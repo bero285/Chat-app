@@ -15,11 +15,14 @@ import { MyContext } from "../Context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const fetchAllUsers = async () => {
   try {
-    const response = await fetch("https://chat-app-fw16.onrender.com/users");
+
+    const response = await fetch("somerandomlink/users");
+
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
+
     return data;
   } catch (error) {
     throw new Error("Error fetching users: " + error.message);
@@ -73,7 +76,7 @@ export default function ChatroomScreen({ navigation }) {
           <TouchableOpacity onPress={() => removeData("username")}>
             <Image
               source={{
-                uri: "https://cdn-icons-png.flaticon.com/512/2891/2891491.png",
+                uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/OOjs_UI_icon_logOut-ltr-invert.svg/1024px-OOjs_UI_icon_logOut-ltr-invert.svg.png",
               }}
               style={styles.image}
             />
@@ -112,6 +115,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     alignItems: "center",
+    backgroundColor: "purple",
   },
   headContainer: {
     marginTop: 10,
@@ -122,6 +126,7 @@ const styles = StyleSheet.create({
     // backgroundColor: "red",
     textAlign: "center",
     fontSize: 20,
+    color: "white",
   },
   search: {
     fontSize: 18,
@@ -132,18 +137,21 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     height: 45,
     width: "80%",
+    backgroundColor: "white"
   },
   chats: {
     flex: 1,
     width: "95%",
     paddingTop: 40,
-    paddingBottom: 10,
+    // paddingBottom: 10,
+
     // marginTop: 5,
   },
 
   chatText: {
     fontSize: 20,
     marginLeft: 10,
+    color: "white"
   },
   deleteContainer: {
     flexDirection: "row",
@@ -152,11 +160,12 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   image: {
-    width: 20,
-    height: 20,
+    width: 18,
+    height: 18,
   },
   flatlist: {
     flex: 1,
     width: "100%",
+
   },
 });
